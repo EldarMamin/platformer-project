@@ -1,5 +1,4 @@
 #include "raylib.h"
-
 #include "globals.h"
 #include "level.h"
 #include "player.h"
@@ -18,7 +17,7 @@ void update_game() {
                 game_state = GAME_STATE;
                 load_level(0);
             }
-            break;
+        break;
 
         case GAME_STATE:
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
@@ -41,13 +40,13 @@ void update_game() {
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = PAUSED_STATE;
             }
-            break;
+        break;
 
         case PAUSED_STATE:
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = GAME_STATE;
             }
-            break;
+        break;
 
         case DEATH_STATE:
             update_player_gravity();
@@ -121,9 +120,8 @@ void draw_game() {
 
 int main() {
     SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(GetScreenWidth(), GetScreenHeight(), "Platformer");
+    InitWindow(1024, 480, "Platformer");
     SetTargetFPS(60);
-    ToggleFullscreen();
     HideCursor();
 
     load_fonts();

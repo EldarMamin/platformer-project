@@ -10,6 +10,8 @@
 
 /* Game Elements */
 
+
+
 inline const char WALL      = '#',
                   WALL_DARK = '=',
                   AIR       = '-',
@@ -20,7 +22,6 @@ inline const char WALL      = '#',
                   EXIT      = 'E';
 
 /* Levels */
-
 struct level {
     size_t rows = 0, columns = 0;
     char *data = nullptr;
@@ -126,14 +127,9 @@ inline int player_level_scores[LEVEL_COUNT];
 inline const int MAX_PLAYER_LIVES = 3;
 inline int player_lives = MAX_PLAYER_LIVES;
 
-/* Enemy data */
+/*Enemy data*/
 
-struct Enemy {
-    Vector2 pos;
-    bool is_looking_right;
-};
-
-inline std::vector<Enemy> enemies;
+#include "enemies_controller.h"
 
 /* Graphic Metrics */
 
@@ -347,11 +343,9 @@ void update_player();
 void update_player_gravity();
 
 // ENEMY_H
-
+//
 void spawn_enemies();
-
 void update_enemies();
-
 bool is_colliding_with_enemies(Vector2 pos);
 void remove_colliding_enemy(Vector2 pos);
 
@@ -384,5 +378,6 @@ void unload_sounds();
 
 float rand_from_to(float from, float to);
 float rand_up_to(float to);
+
 
 #endif // GLOBALS_H

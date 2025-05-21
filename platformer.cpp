@@ -7,6 +7,7 @@
 #include "graphics.h"
 #include "assets.h"
 #include "utilities.h"
+#include "player_controller.h"
 
 void update_game() {
     game_frame++;
@@ -18,46 +19,44 @@ void update_game() {
                 game_state = GAME_STATE;
                 load_level(0);
             }
-        break;
+            break;
 
         case GAME_STATE:
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
-                move_player_horizontally(PLAYER_MOVEMENT_SPEED);
+                PlayerController::get_instance().move_player_horizontally(PLAYER_MOVEMENT_SPEED);
             }
 
             if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
-                move_player_horizontally(-PLAYER_MOVEMENT_SPEED);
+                PlayerController::get_instance().move_player_horizontally(-PLAYER_MOVEMENT_SPEED);
             }
 
-            // Calculating collisions to decide whether the player is allowed to jump
-            is_player_on_ground = is_colliding({player_pos.x, player_pos.y + 0.1f}, WALL);
-            if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) || IsKeyDown(KEY_SPACE)) && is_player_on_ground) {
-                player_y_velocity = -JUMP_STRENGTH;
+            if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) || IsKeyDown(KEY_SPACE))
+                && PlayerController::get_instance().is_on_ground()) {
+                PlayerController::get_instance().set_y_velocity(-JUMP_STRENGTH);
             }
 
-            update_player();
+            PlayerController::get_instance().update_player();
             EnemiesController::get_instance().update_enemies();
 
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = PAUSED_STATE;
             }
-        break;
+            break;
 
         case PAUSED_STATE:
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = GAME_STATE;
             }
-        break;
+            break;
 
         case DEATH_STATE:
-            update_player_gravity();
+            PlayerController::get_instance().update_player_gravity();
 
             if (IsKeyPressed(KEY_ENTER)) {
-                if (player_lives > 0) {
+                if (PlayerController::get_instance().get_lives() > 0) {
                     load_level(0);
                     game_state = GAME_STATE;
-                }
-                else {
+                } else {
                     game_state = GAME_OVER_STATE;
                     PlaySound(game_over_sound);
                 }
@@ -85,7 +84,7 @@ void update_game() {
 }
 
 void draw_game() {
-    switch(game_state) {
+    switch (game_state) {
         case MENU_STATE:
             ClearBackground(BLACK);
             draw_menu();
